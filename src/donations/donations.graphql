@@ -1,15 +1,27 @@
+scalar DateTime
+
 type Donation {
-  # Example field (placeholder)
-  exampleField: Int
+  id: Int!
+  count: Int!
+  displayName: String!
+  email: String!
+  mobile: String
+  team: String
+  message: String
+  createdAt: DateTime
+  updatedAt: DateTime
+
 }
 
 input CreateDonationInput {
-  # Example field (placeholder)
-  exampleField: Int
-}
-
-input UpdateDonationInput {
-  id: Int!
+  count: Int!
+  displayName: String!
+  email: String!
+  mobile: String
+  team: String
+  message: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Query {
@@ -19,6 +31,4 @@ type Query {
 
 type Mutation {
   createDonation(createDonationInput: CreateDonationInput!): Donation!
-  updateDonation(updateDonationInput: UpdateDonationInput!): Donation!
-  removeDonation(id: Int!): Donation
 }
