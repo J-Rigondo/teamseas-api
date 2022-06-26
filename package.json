@@ -19,7 +19,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "gen-typings": "ts-node ./src/generate-typings.ts"
+    "gen-typings": "ts-node ./src/generate-typings.ts",
+    "prisma:generate": "prisma generate --watch",
+    "dev": "concurrently \"pnpm:start:dev\" \"pnpm:gen-typings\" \"pnpm:prisma:generate\""
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.16",
@@ -28,11 +30,15 @@
     "@nestjs/graphql": "^10.0.16",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
+    "@prisma/client": "^3.15.2",
+    "apollo-server-core": "^3.9.0",
     "apollo-server-express": "^3.9.0",
     "graphql": "^16.5.0",
+    "graphql-iso-date": "^3.6.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "ts-morph": "^15.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -44,11 +50,13 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^7.2.2",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "28.0.3",
     "prettier": "^2.3.2",
+    "prisma": "^3.15.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
     "ts-jest": "28.0.1",
