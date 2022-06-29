@@ -18,6 +18,11 @@ export class CreateDonationInput {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class OrderByParams {
+    field?: Nullable<string>;
+    direction?: Nullable<string>;
+}
+
 export class Donation {
     id: number;
     count: number;
@@ -31,7 +36,7 @@ export class Donation {
 }
 
 export abstract class IQuery {
-    abstract donations(): Nullable<Donation>[] | Promise<Nullable<Donation>[]>;
+    abstract donations(orderBy?: Nullable<OrderByParams>): Nullable<Donation>[] | Promise<Nullable<Donation>[]>;
 
     abstract donation(id: number): Nullable<Donation> | Promise<Nullable<Donation>>;
 }

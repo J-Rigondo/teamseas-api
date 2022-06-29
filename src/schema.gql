@@ -1,0 +1,165 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Donation {
+  count: Int!
+  createdAt: DateTime!
+  id: ID!
+  message: String
+  team: String
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+input DonationCreateManyUserInput {
+  count: Int!
+  createdAt: DateTime
+  id: Int
+  message: String
+  team: String
+  updatedAt: DateTime
+}
+
+input DonationCreateManyUserInputEnvelope {
+  data: [DonationCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input DonationCreateNestedManyWithoutUserInput {
+  connect: [DonationWhereUniqueInput!]
+  connectOrCreate: [DonationCreateOrConnectWithoutUserInput!]
+  create: [DonationCreateWithoutUserInput!]
+  createMany: DonationCreateManyUserInputEnvelope
+}
+
+input DonationCreateOrConnectWithoutUserInput {
+  create: DonationCreateWithoutUserInput!
+  where: DonationWhereUniqueInput!
+}
+
+input DonationCreateWithoutUserInput {
+  count: Int!
+  createdAt: DateTime
+  message: String
+  team: String
+  updatedAt: DateTime
+}
+
+input DonationWhereUniqueInput {
+  id: Int
+}
+
+type LoginResponse {
+  accessToken: String!
+  user: User!
+}
+
+input LoginUserInput {
+  """이메일"""
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createUser(createUserInput: UserCreateInput!): User!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
+  removeUser(id: Int!): User!
+}
+
+type Post {
+  author: User!
+  authorId: Int!
+  content: String
+  createdAt: DateTime!
+  id: ID!
+  likes: Int!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+  views: Int!
+}
+
+input PostCreateManyAuthorInput {
+  content: String
+  createdAt: DateTime
+  id: Int
+  likes: Int
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+  views: Int
+}
+
+input PostCreateManyAuthorInputEnvelope {
+  data: [PostCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateNestedManyWithoutAuthorInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+}
+
+input PostCreateOrConnectWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateWithoutAuthorInput {
+  content: String
+  createdAt: DateTime
+  likes: Int
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+  views: Int
+}
+
+input PostWhereUniqueInput {
+  id: Int
+}
+
+type Query {
+  user(where: UserWhereUniqueInput!): User!
+  users: [User!]!
+}
+
+type User {
+  _count: UserCount!
+  donations: [Donation!]
+
+  """이메일"""
+  email: String!
+  id: ID!
+
+  """이름"""
+  name: String!
+  posts: [Post!]
+}
+
+type UserCount {
+  donations: Int!
+  posts: Int!
+}
+
+input UserCreateInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  name: String!
+  password: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: Int
+}

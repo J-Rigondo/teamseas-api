@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
 import * as bcrypt from 'bcrypt';
-import { LoginUserInput } from 'src/auth/dtos/login-user.input';
+import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async validateUser(email: string, password: string) {
     const where = new UserWhereUniqueInput();
@@ -18,8 +22,11 @@ export class AuthService {
       return null;
     }
 
-    const hash = await bcrypt.hash(password, user.salt);
-    const isMatch = await bcrypt.compare(password, hash);
+    //const hash = await bcrypt.hash(password, user.salt);
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log(password, user.password);
+    console.log(isMatch);
 
     if (!isMatch) {
       return null;
@@ -28,14 +35,9 @@ export class AuthService {
     return user;
   }
 
-  async login(loginUserInput: LoginUserInput) {
-    const where = new UserWhereUniqueInput();
-    where.email = loginUserInput.email;
-
-    const user = await this.usersService.findOne(where);
-
+  async login(user: User) {
     return {
-      accessToken: 'jwt',
+      accessToken: this.jwtService.sign({ email: user.email, sub: user.id }),
       user,
     };
   }
