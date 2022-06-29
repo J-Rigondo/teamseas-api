@@ -10,15 +10,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Donation {
-	id Int @id @default(autoincrement())
-	count Int
-	displayName String
-	email String
-	mobile String?
-	message String?
-	team String?
-	createdAt DateTime @default(now())
-	updatedAt DateTime @default(now())
+generator nestgraphql {
+  provider               = "node node_modules/prisma-nestjs-graphql"
+  output                 = "../src/@generated/prisma-nestjs-graphql"
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+}
 
+model Donation {
+  id        Int      @id @default(autoincrement())
+  ///@Validator.Min(1)
+  count     Int
+  message   String?
+  team      String?
+  user      User     @relation(fields: [userId], references: id)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@map("donation")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  ///@Validator.MinLength(2)
+  ///이름
+  name      String
+  ///@Validator.IsEmail()
+  ///이메일
+  email     String     @unique
+  ///@HideField()
+  password String
+  ///@HideField(input: true, output: true)
+  salt String
+  posts     Post[]
+  donations Donation[]
+
+  @@map("user")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: id)
+  authorId  Int
+  views     Int      @default(0)
+  likes     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@map("post")
 }
