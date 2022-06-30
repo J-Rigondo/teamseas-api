@@ -42,10 +42,9 @@ model User {
   email     String     @unique
   ///@HideField()
   password String
-  ///@HideField(input: true, output: true)
-  salt String
   posts     Post[]
   donations Donation[]
+  role Role
 
   @@map("user")
 }
@@ -63,4 +62,10 @@ model Post {
   updatedAt DateTime @default(now())
 
   @@map("post")
+}
+
+///권한
+enum Role {
+	ADMIN
+	USER
 }
