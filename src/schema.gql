@@ -133,6 +133,12 @@ type Query {
   users: [User!]!
 }
 
+"""권한"""
+enum Role {
+  ADMIN
+  USER
+}
+
 type User {
   _count: UserCount!
   donations: [Donation!]
@@ -144,6 +150,7 @@ type User {
   """이름"""
   name: String!
   posts: [Post!]
+  role: Role!
 }
 
 type UserCount {
@@ -157,6 +164,7 @@ input UserCreateInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  role: Role!
 }
 
 input UserWhereUniqueInput {
