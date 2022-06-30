@@ -5,6 +5,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { loggingMiddleware } from 'src/common/middleware/logging-prisma.middleware';
+import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
   imports: [
@@ -15,7 +17,21 @@ import { AuthModule } from './auth/auth.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
     }),
-    UsersModule,
+    // PrismaModule.forRoot({
+    //   isGlobal: true,
+    //   prismaServiceOptions: {
+    //     // middlewares: [loggingMiddleware()],
+    //     prismaOptions: {
+    //       log: [
+    //         { emit: 'stdout', level: 'query' },
+    //         { emit: 'stdout', level: 'info' },
+    //         { emit: 'stdout', level: 'warn' },
+    //         { emit: 'stdout', level: 'error' },
+    //       ],
+    //     },
+    //   },
+    // }),
+    // UsersModule,
     AuthModule,
   ],
 })

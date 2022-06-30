@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserCreateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-create.input';
-import { PrismaService } from 'prisma/prisma.service';
 import { UserWhereInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where.input';
 import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -11,9 +11,8 @@ export class UsersService {
 
   async create(createUserInput: UserCreateInput) {
     const { password } = createUserInput;
-    const { hash, salt } = await this.hashingPassword(password);
+    const { hash } = await this.hashingPassword(password);
     createUserInput.password = hash;
-    createUserInput.salt = salt;
 
     const result = await this.prisma.user.create({
       data: createUserInput,

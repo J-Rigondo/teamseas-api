@@ -3,7 +3,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { LoginResponse } from 'src/auth/dtos/login-response';
 import { LoginUserInput } from 'src/auth/dtos/login-user.input';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/@guard/gql-auth.guard';
+import { GqlAuthGuard } from 'src/common/guard/gql-auth.guard';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 
 @Resolver()
