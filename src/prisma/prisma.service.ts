@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { createPrismaQueryEventHandler } from 'prisma-query-log';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -22,9 +23,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
 
     this.$on('query' as any, (e: Prisma.QueryEvent) => {
-      console.log('\u001B[96m', 'Query: ' + e.query);
-      console.log('Params: ' + e.params);
-      console.log('Duration: ' + e.duration + 'ms');
+      console.log(`\u001B[96m Query: `, `\x1b[0m${e.query}`);
+      console.log(`\u001B[96m Params: `, `\x1b[0m${e.params}`);
+      console.log('\u001B[96m Duration: ' + `\x1b[0m${e.duration} ms`);
     });
   }
 
