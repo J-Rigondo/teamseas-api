@@ -74,16 +74,22 @@ type Mutation {
 }
 
 type Post {
+  _count: PostCount!
   author: User!
   authorId: Int!
   content: String
   createdAt: DateTime!
+  favoritedBy: [User!]
   id: ID!
   likes: Int!
   published: Boolean!
   title: String!
   updatedAt: DateTime!
   views: Int!
+}
+
+type PostCount {
+  favoritedBy: Int!
 }
 
 input PostCreateManyAuthorInput {
@@ -109,12 +115,35 @@ input PostCreateNestedManyWithoutAuthorInput {
   createMany: PostCreateManyAuthorInputEnvelope
 }
 
+input PostCreateNestedManyWithoutFavoritedByInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutFavoritedByInput!]
+  create: [PostCreateWithoutFavoritedByInput!]
+}
+
 input PostCreateOrConnectWithoutAuthorInput {
   create: PostCreateWithoutAuthorInput!
   where: PostWhereUniqueInput!
 }
 
+input PostCreateOrConnectWithoutFavoritedByInput {
+  create: PostCreateWithoutFavoritedByInput!
+  where: PostWhereUniqueInput!
+}
+
 input PostCreateWithoutAuthorInput {
+  content: String
+  createdAt: DateTime
+  favoritedBy: UserCreateNestedManyWithoutFavoritePostsInput
+  likes: Int
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+  views: Int
+}
+
+input PostCreateWithoutFavoritedByInput {
+  author: UserCreateNestedOneWithoutPostsInput!
   content: String
   createdAt: DateTime
   likes: Int
@@ -147,6 +176,9 @@ type User {
 
   """이메일"""
   email: String!
+  favoritePosts: [Post!]
+  followers: [User!]
+  following: [User!]
   id: ID!
 
   """이름"""
@@ -157,15 +189,109 @@ type User {
 
 type UserCount {
   donations: Int!
+  favoritePosts: Int!
+  followers: Int!
+  following: Int!
   posts: Int!
 }
 
 input UserCreateInput {
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
+  favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
+  followers: UserCreateNestedManyWithoutFollowingInput
+  following: UserCreateNestedManyWithoutFollowersInput
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  role: Role!
+}
+
+input UserCreateNestedManyWithoutFavoritePostsInput {
+  connect: [UserWhereUniqueInput!]
+  connectOrCreate: [UserCreateOrConnectWithoutFavoritePostsInput!]
+  create: [UserCreateWithoutFavoritePostsInput!]
+}
+
+input UserCreateNestedManyWithoutFollowersInput {
+  connect: [UserWhereUniqueInput!]
+  connectOrCreate: [UserCreateOrConnectWithoutFollowersInput!]
+  create: [UserCreateWithoutFollowersInput!]
+}
+
+input UserCreateNestedManyWithoutFollowingInput {
+  connect: [UserWhereUniqueInput!]
+  connectOrCreate: [UserCreateOrConnectWithoutFollowingInput!]
+  create: [UserCreateWithoutFollowingInput!]
+}
+
+input UserCreateNestedOneWithoutPostsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPostsInput
+  create: UserCreateWithoutPostsInput
+}
+
+input UserCreateOrConnectWithoutFavoritePostsInput {
+  create: UserCreateWithoutFavoritePostsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutFollowersInput {
+  create: UserCreateWithoutFollowersInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutFollowingInput {
+  create: UserCreateWithoutFollowingInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutPostsInput {
+  create: UserCreateWithoutPostsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutFavoritePostsInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  followers: UserCreateNestedManyWithoutFollowingInput
+  following: UserCreateNestedManyWithoutFollowersInput
+  name: String!
+  password: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  role: Role!
+}
+
+input UserCreateWithoutFollowersInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
+  following: UserCreateNestedManyWithoutFollowersInput
+  name: String!
+  password: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  role: Role!
+}
+
+input UserCreateWithoutFollowingInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
+  followers: UserCreateNestedManyWithoutFollowingInput
+  name: String!
+  password: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  role: Role!
+}
+
+input UserCreateWithoutPostsInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
+  followers: UserCreateNestedManyWithoutFollowingInput
+  following: UserCreateNestedManyWithoutFollowersInput
+  name: String!
+  password: String!
   role: Role!
 }
 

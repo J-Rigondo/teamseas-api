@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { createPrismaQueryEventHandler } from 'prisma-query-log';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {

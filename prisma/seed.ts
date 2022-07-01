@@ -58,18 +58,20 @@ prisma.$on('query', (e) => {
 // }
 
 async function main() {
-  const result = await prisma.user.findUnique({
-    where: {
-      id: 1,
-    },
-    include: {
-      _count: {
-        select: { posts: true, donations: true },
-      },
-    },
-  });
-  console.log(result);
-  return result;
+  // const result = await prisma.user.create({
+  //   data: {
+  //     email: 'f1@prw.com',
+  //     name: 'f1',
+  //     password: '1',
+  //     role: 'USER',
+  //     followers: {
+  //       create: [
+  //         { email: 'f2@prw.com', name: 'f2', password: '1', role: 'USER' },
+  //         { email: 'f3@prw.com', name: 'f3', password: '1', role: 'USER' },
+  //       ],
+  //     },
+  //   },
+  // });
 }
 
 main()
