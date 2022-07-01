@@ -130,6 +130,8 @@ input PostWhereUniqueInput {
 
 type Query {
   user(where: UserWhereUniqueInput!): User!
+
+  """전체 유저 리스트"""
   users: [User!]!
 }
 

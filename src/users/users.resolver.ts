@@ -1,29 +1,64 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
-import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
-import { UserCreateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-create.input';
 import { Auth } from 'src/common/decorator/auth.decorator';
+import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
+import { UserCreateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-create.input';
 import { Role } from 'src/@generated/prisma-nestjs-graphql/prisma/role.enum';
+import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   @Mutation(() => User)
   createUser(@Args('createUserInput') createUserInput: UserCreateInput) {
     return this.usersService.create(createUserInput);
   }
 
-  @Query(() => [User], { name: 'users' })
+  @Query(() => [User], { name: 'users', description: '전체 유저 리스트' })
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Auth(Role.ADMIN)
+  //@Auth(Role.ADMIN)
   @Query(() => User, { name: 'user' })
   findOne(@Args('where') where: UserWhereUniqueInput) {
     return this.usersService.findOne(where);
+  }
+
+  @ResolveField('posts')
+  async posts(@Parent() user: User) {
+    return this.prismaService.user
+      .findUnique({ where: { id: user.id } })
+      .posts();
+  }
+
+  @ResolveField('_count')
+  async _count(@Parent() user: User) {
+    const result = await this.prismaService.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        _count: {
+          select: { posts: true, donations: true },
+        },
+      },
+    });
+
+    return result._count;
   }
 
   // @Mutation(() => User)

@@ -29,7 +29,7 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.prisma.user.findMany();
   }
 
   findOne(where: UserWhereUniqueInput) {

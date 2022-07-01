@@ -6,7 +6,7 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { loggingMiddleware } from 'src/common/middleware/logging-prisma.middleware';
-import { PrismaModule } from 'nestjs-prisma';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -33,6 +33,7 @@ import { PrismaModule } from 'nestjs-prisma';
     // }),
     // UsersModule,
     AuthModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}

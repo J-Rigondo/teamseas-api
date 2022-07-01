@@ -58,44 +58,18 @@ prisma.$on('query', (e) => {
 // }
 
 async function main() {
-  await prisma.$transaction(async (prisma) => {
-    await prisma.donation.create({
-      data: {
-        count: 13,
-        message: 'test donate',
-        user: {
-          connect: {
-            id: 3,
-          },
-        },
+  const result = await prisma.user.findUnique({
+    where: {
+      id: 1,
+    },
+    include: {
+      _count: {
+        select: { posts: true, donations: true },
       },
-    });
-
-    // await prisma.post.create({
-    //   data: {
-    //     title: 'text record3',
-    //     author: {
-    //       connect: {
-    //         id: 4,
-    //       },
-    //     },
-    //   },
-    // });
-
-    const result = await prisma.post.create({
-      data: {
-        title: 'test post',
-        author: {
-          connect: {
-            id: 3,
-          },
-        },
-      },
-    });
-
-    console.log(result);
-    return result;
+    },
   });
+  console.log(result);
+  return result;
 }
 
 main()
