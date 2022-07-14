@@ -11,9 +11,10 @@ import { UsersService } from './users.service';
 import { Auth } from 'src/common/decorator/auth.decorator';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 import { UserCreateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-create.input';
-import { Role } from 'src/@generated/prisma-nestjs-graphql/prisma/role.enum';
 import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserUncheckedUpdateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-unchecked-update.input';
+import { UpdateUserInput } from 'src/users/dtos/update-user.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -61,10 +62,13 @@ export class UsersResolver {
     return result._count;
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.usersService.update(updateUserInput.id, updateUserInput);
-  // }
+  @Mutation(() => User)
+  updateUser(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ) {
+    return this.usersService.update(id, updateUserInput);
+  }
 
   @Mutation(() => User)
   removeUser(@Args('id', { type: () => Int }) id: number) {
