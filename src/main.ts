@@ -1,7 +1,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,14 +12,16 @@ async function bootstrap() {
     }),
   );
 
-  // enable shutdown hook
-  // const prismaService: PrismaService = app.get(PrismaService);
-  // prismaService.enableShutdownHooks(app);
+  app.use(cookieParser());
+  // app.enableCors({
+  //   credentials: true,
+  //   origin: process.env.FRONT_END_URL,
+  // });
 
   // Prisma Client Exception Filter for unhandled exceptions
   // const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();
