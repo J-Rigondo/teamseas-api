@@ -71,6 +71,7 @@ type Mutation {
   createUser(createUserInput: UserCreateInput!): User!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   removeUser(id: Int!): User!
+  updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
 }
 
 type Post {
@@ -170,6 +171,12 @@ enum Role {
   USER
 }
 
+input UpdateUserInput {
+  email: String
+  name: String
+  refreshToken: String
+}
+
 type User {
   _count: UserCount!
   donations: [Donation!]
@@ -204,6 +211,7 @@ input UserCreateInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  refreshToken: String
   role: Role!
 }
 
@@ -259,6 +267,7 @@ input UserCreateWithoutFavoritePostsInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  refreshToken: String
   role: Role!
 }
 
@@ -270,6 +279,7 @@ input UserCreateWithoutFollowersInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  refreshToken: String
   role: Role!
 }
 
@@ -281,6 +291,7 @@ input UserCreateWithoutFollowingInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  refreshToken: String
   role: Role!
 }
 
@@ -292,6 +303,7 @@ input UserCreateWithoutPostsInput {
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
   password: String!
+  refreshToken: String
   role: Role!
 }
 
