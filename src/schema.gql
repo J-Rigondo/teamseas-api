@@ -69,6 +69,7 @@ input LoginUserInput {
 
 type Mutation {
   createUser(createUserInput: UserCreateInput!): User!
+  googleLogin(tokenId: String!): LoginResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   removeUser(id: Int!): User!
   updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!

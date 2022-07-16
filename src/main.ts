@@ -13,10 +13,10 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
-  // app.enableCors({
-  //   credentials: true,
-  //   origin: process.env.FRONT_END_URL,
-  // });
+  app.enableCors({
+    credentials: true,
+    origin: process.env.FRONT_END_URL,
+  });
 
   // Prisma Client Exception Filter for unhandled exceptions
   // const { httpAdapter } = app.get(HttpAdapterHost);
