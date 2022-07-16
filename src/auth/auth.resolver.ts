@@ -12,6 +12,8 @@ import { LoginResponse } from 'src/auth/dtos/login-response';
 import { LoginUserInput } from 'src/auth/dtos/login-user.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/common/guard/gql-auth.guard';
+import { GoogleAuthGuard } from 'src/common/guard/google-auth.guard';
+import { User as ContextUser } from 'src/common/decorator/user.decorator';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 
 @Resolver()
@@ -23,7 +25,18 @@ export class AuthResolver {
   login(
     @Args('loginUserInput') loginUserInput: LoginUserInput,
     @Context() context,
+    @ContextUser() user: User,
   ) {
-    return this.authService.login(context.user);
+    const result = this.authService.login(context.user);
+
+    context.res.cookie('some-cookie', 'some-value', { httpOnly: true });
+    console.log(context.res);
+    return result;
+  }
+
+  @Mutation(() => LoginResponse)
+  // @UseGuards(GoogleAuthGuard)
+  googleLogin(@Args('tokenId', { type: () => String }) tokenId: string) {
+    return this.authService.googleLogin(tokenId);
   }
 }
