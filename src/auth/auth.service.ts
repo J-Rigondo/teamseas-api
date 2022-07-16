@@ -7,6 +7,9 @@ import { JwtService } from '@nestjs/jwt';
 import { hash } from 'bcrypt';
 import { UserUpdateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-update.input';
 import { UpdateUserInput } from 'src/users/dtos/update-user.input';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 @Injectable()
 export class AuthService {
@@ -83,5 +86,15 @@ export class AuthService {
       httpOnly: true,
       maxAge: 0,
     };
+  }
+
+  async googleLogin(tokenId: string) {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    console.log(ticket.getPayload());
+    return;
   }
 }
