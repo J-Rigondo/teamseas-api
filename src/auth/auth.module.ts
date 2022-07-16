@@ -6,6 +6,8 @@ import { LocalStrategy } from 'src/auth/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { GoogleStrategy } from 'src/auth/google.strategy';
+import { AuthController } from 'src/auth/auth.controller';
 
 @Module({
   imports: [
@@ -17,6 +19,13 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
       secret: process.env.JWT_ACCESS_SECRET,
     }),
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    AuthResolver,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+  ],
+  controllers: [AuthController],
 })
 export class AuthModule {}
