@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
+      ignoreExpiration: false, //false -> JWT 만료 확인 및 401 예외 발생
       secretOrKey: process.env.JWT_ACCESS_SECRET,
       logging: true,
     });
