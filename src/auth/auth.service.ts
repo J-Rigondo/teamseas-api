@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { hash } from 'bcrypt';
-import { UserUpdateInput } from 'src/@generated/prisma-nestjs-graphql/user/user-update.input';
 import { UpdateUserInput } from 'src/users/dtos/update-user.input';
 import { OAuth2Client } from 'google-auth-library';
+import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -31,9 +30,6 @@ export class AuthService {
     //const hash = await bcrypt.hash(password, user.salt);
     const isMatch = await bcrypt.compare(password, user.password);
 
-    console.log(password, user.password);
-    console.log(isMatch);
-
     if (!isMatch) {
       return null;
     }
@@ -42,13 +38,20 @@ export class AuthService {
   }
 
   async login(user: User) {
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role,
+    };
+
+    const accessToken = this.generateAccessToken(payload);
+    const refeshTokenInfo = this.generateRefreshToken(payload);
+
+    //await this.setUserRefreshToken(refeshTokenInfo.refreshToken, user);
+
     return {
-      accessToken: this.jwtService.sign({
-        email: user.email,
-        sub: user.id,
-        role: user.role,
-      }),
-      user,
+      accessToken,
+      refeshTokenInfo,
     };
   }
 
@@ -79,6 +82,8 @@ export class AuthService {
     this.usersService.update(user.id, updateUserInput);
   }
 
+  async verifyRefreshToken(refreshToken: string, id: number) {}
+
   logout() {
     return {
       domain: process.env.FRONT_END_DOMAIN,
@@ -88,6 +93,7 @@ export class AuthService {
     };
   }
 
+  //for graphql
   async googleLogin(tokenId: string) {
     const ticket = await client.verifyIdToken({
       idToken: tokenId,

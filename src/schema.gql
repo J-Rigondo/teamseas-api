@@ -64,6 +64,8 @@ type LoginResponse {
 input LoginUserInput {
   """이메일"""
   email: String!
+
+  """비밀번호"""
   password: String!
 }
 
@@ -192,6 +194,7 @@ type User {
   """이름"""
   name: String!
   posts: [Post!]
+  provider: String
   role: Role!
 }
 
@@ -212,6 +215,7 @@ input UserCreateInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  provider: String
   refreshToken: String
   role: Role!
 }
@@ -268,6 +272,7 @@ input UserCreateWithoutFavoritePostsInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  provider: String
   refreshToken: String
   role: Role!
 }
@@ -280,6 +285,7 @@ input UserCreateWithoutFollowersInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  provider: String
   refreshToken: String
   role: Role!
 }
@@ -292,6 +298,7 @@ input UserCreateWithoutFollowingInput {
   name: String!
   password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
+  provider: String
   refreshToken: String
   role: Role!
 }
@@ -304,6 +311,7 @@ input UserCreateWithoutPostsInput {
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
   password: String!
+  provider: String
   refreshToken: String
   role: Role!
 }

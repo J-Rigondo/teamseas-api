@@ -50,6 +50,7 @@ model User {
   role          Role
   ///@HideField()
   refreshToken String?
+  provider String?
 
   @@map("user")
 }

@@ -36,7 +36,7 @@ export class UsersService {
       }
 
       const { password } = createUserInput;
-      const { hash } = await this.hashingPassword(password);
+      const hash = await this.hashingPassword(password);
       createUserInput.password = hash;
 
       const result = await prisma.user.create({
@@ -48,10 +48,7 @@ export class UsersService {
   }
 
   private async hashingPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-
-    return { hash, salt };
+    return await bcrypt.hash(password, 10);
   }
 
   findAll() {
