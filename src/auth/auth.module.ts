@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { GoogleStrategy } from 'src/auth/google.strategy';
 import { AuthController } from 'src/auth/auth.controller';
+import { KakaoStrategy } from 'src/auth/kakao.strategy';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthController } from 'src/auth/auth.controller';
     LocalStrategy,
     JwtStrategy,
     GoogleStrategy,
+    KakaoStrategy,
   ],
   controllers: [AuthController],
 })
