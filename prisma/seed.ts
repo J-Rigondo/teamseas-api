@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient({
   log: [
@@ -58,25 +59,31 @@ prisma.$on('query', (e) => {
 // }
 
 async function main() {
-  // const result = await prisma.user.create({
-  //   data: {
-  //     email: 'f1@prw.com',
-  //     name: 'f1',
-  //     password: '1',
-  //     role: 'USER',
-  //     followers: {
-  //       create: [
-  //         { email: 'f2@prw.com', name: 'f2', password: '1', role: 'USER' },
-  //         { email: 'f3@prw.com', name: 'f3', password: '1', role: 'USER' },
-  //       ],
-  //     },
-  //   },
-  // });
+  const postPromises = [];
+
+  new Array(20).fill(0).forEach((_) => {
+    postPromises.push(
+      prisma.post.create({
+        data: {
+          title: faker.internet.userName(),
+          content: `this is my description, ${faker.lorem.paragraph()} content`,
+          author: {
+            connect: {
+              id: 1,
+            },
+          },
+        },
+      }),
+    );
+  });
+
+  const posts = await Promise.all(postPromises);
+  console.log(posts);
 }
 
 main()
   .catch((e) => {
-    console.log(e);
+    console.log(`seed error!!!! -> ${e}`);
     process.exit(1);
   })
   .finally(async () => {

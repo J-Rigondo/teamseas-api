@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -70,10 +75,13 @@ input LoginUserInput {
 }
 
 type Mutation {
+  createPost(createPostInput: CreatePostInput!): PostEntity!
   createUser(createUserInput: UserCreateInput!): User!
   googleLogin(tokenId: String!): LoginResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  removePost(id: Int!): PostEntity!
   removeUser(id: Int!): User!
+  updatePost(updatePostInput: UpdatePostInput!): PostEntity!
   updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
 }
 
@@ -157,11 +165,33 @@ input PostCreateWithoutFavoritedByInput {
   views: Int
 }
 
+type PostEntity {
+  _count: PostCount!
+  author: User!
+  authorId: Int!
+  content: String
+  createdAt: DateTime!
+  favoritedBy: [User!]
+  id: ID!
+  likes: Int!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+  views: Int!
+}
+
+type PostResponse {
+  nextId: String
+  posts: [PostEntity!]!
+}
+
 input PostWhereUniqueInput {
   id: Int
 }
 
 type Query {
+  post(id: Int!): PostEntity!
+  posts(cursor: String): PostResponse!
   user(where: UserWhereUniqueInput!): User!
 
   """전체 유저 리스트"""
@@ -172,6 +202,12 @@ type Query {
 enum Role {
   ADMIN
   USER
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdateUserInput {

@@ -33,7 +33,7 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  //@Auth(Role.ADMIN)
+  // @Auth(Role.ADMIN)
   @Query(() => User, { name: 'user' })
   findOne(@Args('where') where: UserWhereUniqueInput) {
     return this.usersService.findOne(where);
