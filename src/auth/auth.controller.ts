@@ -6,6 +6,8 @@ import {
   Req,
   Res,
   UseGuards,
+  Redirect,
+  Param,
 } from '@nestjs/common';
 import { GoogleAuthGuard } from 'src/common/guard/google-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
@@ -41,7 +43,13 @@ export class AuthController {
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Req() req, @Res() res) {
-    return res.redirect(process.env.FRONT_END_URL);
+    return res.redirect(`${process.env.FRONT_END_URL}/1`);
+  }
+
+  @Get('/token/:id')
+  getToken(@Param('id') id: string) {
+    console.log(id);
+    return { accessToken: 'test', username: 'jun' };
   }
 
   @Get('/kakao/login')
@@ -53,6 +61,6 @@ export class AuthController {
   @Get('/kakao/callback')
   @UseGuards(AuthGuard('kakao'))
   kakaoAuthRedirect(@Req() req, @Res() res) {
-    return res.redirect(process.env.FRONT_END_URL);
+    return res.redirect(`${process.env.FRONT_END_URL}/1`);
   }
 }
