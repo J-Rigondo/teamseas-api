@@ -15,7 +15,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     credentials: true,
-    origin: [process.env.FRONT_END_URL, 'https://studio.apollographql.com'],
+    origin: process.env.FRONT_END_URL,
   });
 
   // Prisma Client Exception Filter for unhandled exceptions

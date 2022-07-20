@@ -9,9 +9,11 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { GoogleStrategy } from 'src/auth/google.strategy';
 import { AuthController } from 'src/auth/auth.controller';
 import { KakaoStrategy } from 'src/auth/kakao.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     UsersModule,
     // UsersService,
     PassportModule,

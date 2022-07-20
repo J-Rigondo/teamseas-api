@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { UserWhereUniqueInput } from 'src/@generated/prisma-nestjs-graphql/user/user-where-unique.input';
 import * as bcrypt from 'bcrypt';
@@ -82,7 +82,9 @@ export class AuthService {
     this.usersService.update(user.id, updateUserInput);
   }
 
-  async verifyRefreshToken(refreshToken: string, id: number) {}
+  async verifyRefreshToken(refreshToken: string, id: number) {
+    return;
+  }
 
   logout() {
     return {
@@ -102,5 +104,32 @@ export class AuthService {
 
     console.log(ticket.getPayload());
     return;
+  }
+
+  kakaoLogin() {
+    return;
+  }
+
+  checkRefreshToken(refreshToken: string) {
+    console.log(refreshToken);
+    if (!refreshToken) {
+      return new UnauthorizedException();
+    }
+
+    //confirm refresh token logic
+
+    const payload = {
+      email: 'futuregoing@kakao.com',
+      sub: 1,
+      role: 'ADMIN',
+    };
+    const accessToken = this.generateAccessToken(payload);
+
+    return {
+      accessToken,
+      user: {
+        username: 'jun',
+      },
+    };
   }
 }
