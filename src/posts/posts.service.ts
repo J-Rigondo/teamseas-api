@@ -3,10 +3,14 @@ import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PostResponse } from 'src/posts/dto/post-response';
+import { AsyncContextService } from 'src/async-context/async-context.service';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly asyncContext: AsyncContextService,
+  ) {}
 
   create(createPostInput: CreatePostInput) {
     return 'This action adds a new post';
@@ -32,13 +36,17 @@ export class PostsService {
     response.nextId =
       posts.length === limit ? posts[limit - 1].id + '' : undefined;
 
-    console.log(response);
-
     return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    console.log('here is =====');
+    console.log(this.asyncContext.get());
+    return await this.prisma.post.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updatePostInput: UpdatePostInput) {

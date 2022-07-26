@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   generateAccessToken(payload: any) {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, );
   }
 
   generateRefreshToken(payload: any) {
@@ -102,7 +102,6 @@ export class AuthService {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    console.log(ticket.getPayload());
     return;
   }
 
@@ -111,7 +110,6 @@ export class AuthService {
   }
 
   checkRefreshToken(refreshToken: string) {
-    console.log(refreshToken);
     if (!refreshToken) {
       return new UnauthorizedException();
     }

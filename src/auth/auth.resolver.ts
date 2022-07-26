@@ -30,7 +30,6 @@ export class AuthResolver {
     const result = this.authService.login(context.user);
 
     context.res.cookie('some-cookie', 'some-value', { httpOnly: true });
-    console.log(context.res);
     return result;
   }
 

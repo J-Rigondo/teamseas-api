@@ -1,9 +1,11 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { AsyncContextService } from 'src/async-context/async-context.service';
+import { loggingMiddleware } from 'src/common/middleware/logging-prisma.middleware';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor() {
+  constructor(private readonly asyncContext: AsyncContextService) {
     super({
       log: [
         { emit: 'event', level: 'query' },
@@ -18,6 +20,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       console.log(`\u001B[96m Params: `, `\x1b[0m${e.params}`);
       console.log('\u001B[96m Duration: ' + `\x1b[0m${e.duration} ms`);
     });
+
+    this.$use(loggingMiddleware(asyncContext));
   }
 
   async onModuleInit() {
