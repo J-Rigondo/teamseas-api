@@ -40,8 +40,6 @@ export class PostsService {
   }
 
   async findOne(id: number) {
-    console.log('here is =====');
-    console.log(this.asyncContext.get());
     return await this.prisma.post.findUnique({
       where: {
         id,

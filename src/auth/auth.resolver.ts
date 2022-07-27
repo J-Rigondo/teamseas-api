@@ -29,7 +29,12 @@ export class AuthResolver {
   ) {
     const result = this.authService.login(context.user);
 
-    context.res.cookie('some-cookie', 'some-value', { httpOnly: true });
+    context.res.cookie('some-cookie', 'some-value', {
+      httpOnly: true,
+      maxAge: 100000000000,
+      domain: process.env.FRONT_END_DOMAIN,
+      path: '/',
+    });
     return result;
   }
 
