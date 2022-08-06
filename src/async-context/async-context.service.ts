@@ -1,14 +1,14 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import { Injectable } from '@nestjs/common';
 
-const storage = new AsyncLocalStorage();
-
 @Injectable()
 export class AsyncContextService {
-  set(req) {
-    storage.enterWith(req);
+  private readonly asynsStorage = new AsyncLocalStorage();
+
+  set(data) {
+    this.asynsStorage.enterWith(data);
   }
   get() {
-    return storage.getStore();
+    return this.asynsStorage.getStore();
   }
 }
