@@ -19,10 +19,10 @@ import { AsyncContextInterceptor } from 'src/common/interceptor/async-context.in
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       context: ({ req, res }) => ({ req, res }),
-      // cors: {
-      //   origin: process.env.FRONT_END_URL,
-      //   credentials: true,
-      // },
+      cors: {
+        origin: [process.env.FRONT_END_URL, 'https://studio.apollographql.com'],
+        credentials: true,
+      },
     }),
     AuthModule,
     PrismaModule,
