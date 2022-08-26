@@ -108,11 +108,12 @@ export class AuthController {
   }
 
   @Get('/refresh')
+  @UseGuards(JwtRefreshGuard)
   async checkRefreshToken(@Req() req) {
     console.log(req.cookies);
     const { refresh } = req.cookies;
 
-    const result = this.authService.checkRefreshToken(refresh);
+    const result = this.authService.checkRefreshToken(req.user);
 
     return result;
   }

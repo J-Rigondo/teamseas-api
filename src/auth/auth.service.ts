@@ -131,19 +131,11 @@ export class AuthService {
     return;
   }
 
-  checkRefreshToken(refreshToken: string) {
-    if (!refreshToken) {
-      return new UnauthorizedException();
-    }
-
-    //confirm refresh token logic
-
-    const payload = {
-      email: 'futuregoing@kakao.com',
-      sub: 1,
-      role: 'ADMIN',
-    };
-    const accessToken = this.generateAccessToken(payload);
+  checkRefreshToken(user: User) {
+    const accessToken = this.generateAccessToken({
+      username: user.name,
+      sub: user.id,
+    });
 
     return {
       accessToken,
