@@ -61,8 +61,8 @@ export class UsersService {
     });
   }
 
-  update(id: number, userUpdateInput: UpdateUserInput) {
-    return this.prisma.user.update({
+  async update(id: number, userUpdateInput: UpdateUserInput) {
+    return await this.prisma.user.update({
       where: {
         id,
       },

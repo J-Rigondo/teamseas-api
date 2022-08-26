@@ -19,6 +19,7 @@ import { Response } from 'express';
 import axios from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map, tap } from 'rxjs';
+import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -52,7 +53,7 @@ export class AuthController {
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Req() req, @Res() res) {
-    return res.redirect(`${process.env.FRONT_END_URL}/1`);
+    return res.redirect(`${process.env.FRONT_END_URL}`);
   }
 
   @Get('/token/:id')
@@ -146,5 +147,17 @@ export class AuthController {
     }
 
     return result;
+  }
+
+  @Post('/logout')
+  @UseGuards(JwtRefreshGuard)
+  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logout(req.user);
+    res.cookie('refresh', '', {
+      domain: process.env.FRONT_END_DOMAIN,
+      path: '/',
+      httpOnly: true,
+      maxAge: 0,
+    });
   }
 }

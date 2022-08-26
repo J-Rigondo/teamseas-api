@@ -7,6 +7,7 @@ import { hash } from 'bcrypt';
 import { UpdateUserInput } from 'src/users/dtos/update-user.input';
 import { OAuth2Client } from 'google-auth-library';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -14,6 +15,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
 
@@ -47,7 +49,7 @@ export class AuthService {
     const accessToken = this.generateAccessToken(payload);
     const refeshTokenInfo = this.generateRefreshToken(payload);
 
-    //await this.setUserRefreshToken(refeshTokenInfo.refreshToken, user);
+    await this.setUserRefreshToken(refeshTokenInfo.refreshToken, user);
 
     return {
       accessToken,
@@ -56,7 +58,7 @@ export class AuthService {
   }
 
   generateAccessToken(payload: any) {
-    return this.jwtService.sign(payload, );
+    return this.jwtService.sign(payload);
   }
 
   generateRefreshToken(payload: any) {
@@ -79,14 +81,34 @@ export class AuthService {
     const updateUserInput = new UpdateUserInput();
     updateUserInput.refreshToken = hashed;
 
-    this.usersService.update(user.id, updateUserInput);
+    await this.usersService.update(user.id, updateUserInput);
   }
 
   async verifyRefreshToken(refreshToken: string, id: number) {
-    return;
+    const user = await this.usersService.findOne({
+      id,
+    });
+
+    const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
+
+    if (!isValid) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 
-  logout() {
+  async logout(user: User) {
+    console.log('users', user);
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        refreshToken: null,
+      },
+    });
+
     return {
       domain: process.env.FRONT_END_DOMAIN,
       path: '/',
