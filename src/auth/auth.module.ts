@@ -10,6 +10,7 @@ import { GoogleStrategy } from 'src/auth/google.strategy';
 import { AuthController } from 'src/auth/auth.controller';
 import { KakaoStrategy } from 'src/auth/kakao.strategy';
 import { HttpModule } from '@nestjs/axios';
+import { JwtRefreshStrategy } from 'src/auth/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { HttpModule } from '@nestjs/axios';
     JwtStrategy,
     GoogleStrategy,
     KakaoStrategy,
+    JwtRefreshStrategy,
   ],
   controllers: [AuthController],
 })
