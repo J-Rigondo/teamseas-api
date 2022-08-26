@@ -44,6 +44,9 @@ export class PostsService {
       where: {
         id,
       },
+      include: {
+        author: true,
+      },
     });
   }
 
