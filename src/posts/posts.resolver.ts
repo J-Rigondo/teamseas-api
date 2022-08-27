@@ -6,6 +6,8 @@ import { PostEntity } from 'src/posts/entities/post.entity';
 import { PostResponse } from 'src/posts/dto/post-response';
 import { Auth } from 'src/common/decorator/auth.decorator';
 import { Role } from 'src/@generated/prisma-nestjs-graphql/prisma/role.enum';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 
 @Resolver(() => PostEntity)
 export class PostsResolver {
@@ -23,7 +25,7 @@ export class PostsResolver {
     return this.postsService.findAll(cursor);
   }
 
-  @Auth(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard)
   @Query(() => PostEntity, { name: 'post' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.postsService.findOne(id);

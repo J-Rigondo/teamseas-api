@@ -29,8 +29,6 @@ export class PostsService {
       },
     });
 
-    console.log(posts);
-
     const response = new PostResponse();
     response.posts = posts;
     response.nextId =

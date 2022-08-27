@@ -17,10 +17,10 @@ export class AsyncContextInterceptor implements NestInterceptor {
     if (context.getType<GqlContextType>() === 'graphql') {
       const gqlContext = GqlExecutionContext.create(context);
       const request = gqlContext.getContext().req;
-      console.log('ip', request.ip);
+      // console.log('ip', request.ip);
 
       //before save, exist before value?
-      console.log('exist before?===============', this.asyncContext.get());
+      // console.log('exist before?===============', this.asyncContext.get());
 
       this.asyncContext.set(gqlContext.getContext().req.user);
     }
