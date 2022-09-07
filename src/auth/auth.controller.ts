@@ -85,16 +85,20 @@ export class AuthController {
 
     console.log(provider, id, username, email);
 
-    this.authService.kakaoLogin();
+    const { refreshToken, ...options } = await this.authService.kakaoLogin(
+      provider,
+      email,
+      username,
+    );
 
-    res.cookie('refresh', 'kakao login cookie test', {
-      domain: process.env.FRONT_END_DOMAIN,
-      path: '/',
-      httpOnly: true,
-      maxAge: Number(process.env.JWT_REFRESH_EXPIRATION) * 1000,
-    });
+    res.cookie('refresh', refreshToken, options);
 
-    res.redirect(process.env.FRONT_END_URL);
+    const loc = req.cookies['prev_loc'];
+    console.log('prevloc ', loc);
+
+    res.redirect(
+      loc ? `${process.env.FRONT_END_URL}/${loc}` : process.env.FRONT_END_URL,
+    );
 
     // const {
     //   query: { code },
