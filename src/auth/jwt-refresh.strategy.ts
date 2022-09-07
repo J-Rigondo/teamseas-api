@@ -26,6 +26,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
       `jwt -refresh ${new Date()}================================================================`,
     );
     const refreshToken = req.cookies?.refresh;
-    return this.authService.verifyRefreshToken(refreshToken, payload.sub);
+    return this.authService.verifyRefreshToken(refreshToken, payload);
   }
 }

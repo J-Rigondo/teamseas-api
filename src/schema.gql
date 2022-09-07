@@ -249,7 +249,7 @@ input UserCreateInput {
   followers: UserCreateNestedManyWithoutFollowingInput
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
-  password: String!
+  password: String
   posts: PostCreateNestedManyWithoutAuthorInput
   provider: String
   refreshToken: String
@@ -306,7 +306,7 @@ input UserCreateWithoutFavoritePostsInput {
   followers: UserCreateNestedManyWithoutFollowingInput
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
-  password: String!
+  password: String
   posts: PostCreateNestedManyWithoutAuthorInput
   provider: String
   refreshToken: String
@@ -319,7 +319,7 @@ input UserCreateWithoutFollowersInput {
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
-  password: String!
+  password: String
   posts: PostCreateNestedManyWithoutAuthorInput
   provider: String
   refreshToken: String
@@ -332,7 +332,7 @@ input UserCreateWithoutFollowingInput {
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
   followers: UserCreateNestedManyWithoutFollowingInput
   name: String!
-  password: String!
+  password: String
   posts: PostCreateNestedManyWithoutAuthorInput
   provider: String
   refreshToken: String
@@ -346,7 +346,7 @@ input UserCreateWithoutPostsInput {
   followers: UserCreateNestedManyWithoutFollowingInput
   following: UserCreateNestedManyWithoutFollowersInput
   name: String!
-  password: String!
+  password: String
   provider: String
   refreshToken: String
   role: Role!

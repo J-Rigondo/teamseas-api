@@ -41,7 +41,7 @@ model User {
   ///이메일
   email         String     @unique
   ///@HideField()
-  password      String
+  password      String?
   posts         Post[]
   donations     Donation[]
   favoritePosts Post[]     @relation(name: "FavoritedPosts", references: [id])

@@ -44,6 +44,7 @@ export class AuthService {
       email: user.email,
       sub: user.id,
       role: user.role,
+      provider: '',
     };
 
     const accessToken = this.generateAccessToken(payload);
@@ -81,12 +82,26 @@ export class AuthService {
     const updateUserInput = new UpdateUserInput();
     updateUserInput.refreshToken = hashed;
 
-    await this.usersService.update(user.id, updateUserInput);
+    const res = await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        refreshToken: hashed,
+      },
+    });
+
+    console.log('update res', res);
   }
 
-  async verifyRefreshToken(refreshToken: string, id: number) {
-    const user = await this.usersService.findOne({
-      id,
+  async verifyRefreshToken(
+    refreshToken: string,
+    payload: { sub: string; provider: string },
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: +payload.sub,
+      },
     });
 
     const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
@@ -127,8 +142,50 @@ export class AuthService {
     return;
   }
 
-  kakaoLogin() {
-    return;
+  async kakaoLogin(provider: string, email: string, username: string) {
+    return await this.prisma.$transaction(async (prisma) => {
+      const findMember = await prisma.user.findFirst({
+        where: {
+          email,
+          provider,
+        },
+      });
+
+      if (!findMember) {
+        const createMember = await prisma.user.create({
+          data: {
+            email,
+            name: username,
+            role: 'ADMIN',
+            provider,
+          },
+        });
+
+        const payload = {
+          email: createMember.email,
+          sub: createMember.id,
+          role: createMember.role,
+          provider,
+        };
+
+        const refreshInfo = this.generateRefreshToken(payload);
+        await this.setUserRefreshToken(refreshInfo.refreshToken, createMember);
+
+        return refreshInfo;
+      }
+
+      const payload = {
+        email: findMember.email,
+        sub: findMember.id,
+        role: findMember.role,
+        provider,
+      };
+
+      const refreshInfo = this.generateRefreshToken(payload);
+      await this.setUserRefreshToken(refreshInfo.refreshToken, findMember);
+
+      return refreshInfo;
+    });
   }
 
   checkRefreshToken(user: User) {
