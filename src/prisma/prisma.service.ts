@@ -5,7 +5,7 @@ import { loggingMiddleware } from 'src/common/middleware/logging-prisma.middlewa
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(private readonly asyncContext: AsyncContextService) {
+  constructor() {
     super({
       log: [
         { emit: 'event', level: 'query' },
@@ -20,8 +20,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       console.log(`\u001B[96m Params: `, `\x1b[0m${e.params}`);
       console.log('\u001B[96m Duration: ' + `\x1b[0m${e.duration} ms`);
     });
-
-    this.$use(loggingMiddleware(asyncContext));
   }
 
   async onModuleInit() {

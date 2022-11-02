@@ -15,6 +15,7 @@ import { GqlAuthGuard } from 'src/common/guard/gql-auth.guard';
 import { GoogleAuthGuard } from 'src/common/guard/google-auth.guard';
 import { User as ContextUser } from 'src/common/decorator/user.decorator';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
+import { MobileLoginResponse } from 'src/auth/dtos/mobile-login.response';
 
 @Resolver()
 export class AuthResolver {
@@ -42,5 +43,11 @@ export class AuthResolver {
   // @UseGuards(GoogleAuthGuard)
   googleLogin(@Args('tokenId', { type: () => String }) tokenId: string) {
     return this.authService.googleLogin(tokenId);
+  }
+
+  @Mutation(() => MobileLoginResponse)
+  @UseGuards(GqlAuthGuard)
+  mobileLogin(@ContextUser('local') user: User) {
+    return this.authService.mobileLogin(user);
   }
 }

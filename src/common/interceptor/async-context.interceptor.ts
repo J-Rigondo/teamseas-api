@@ -19,9 +19,6 @@ export class AsyncContextInterceptor implements NestInterceptor {
       const request = gqlContext.getContext().req;
       console.log('ip', request.ip);
 
-      //before save, exist before value?
-      console.log('exist before?===============', this.asyncContext.get());
-      // this.asyncContext.set(request.user);
       this.asyncContext.set({ ip: request.ip });
     }
     return next.handle();

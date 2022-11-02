@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   generateAccessToken(payload: any) {
-    return this.jwtService.sign(payload, );
+    return this.jwtService.sign(payload);
   }
 
   generateRefreshToken(payload: any) {
@@ -130,4 +130,6 @@ export class AuthService {
       },
     };
   }
+
+  mobileLogin(user: User) {}
 }
