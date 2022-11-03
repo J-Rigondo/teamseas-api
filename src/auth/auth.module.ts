@@ -10,6 +10,7 @@ import { GoogleStrategy } from 'src/auth/google.strategy';
 import { AuthController } from 'src/auth/auth.controller';
 import { KakaoStrategy } from 'src/auth/kakao.strategy';
 import { HttpModule } from '@nestjs/axios';
+import { MobileJwtRefreshStrategy } from 'src/auth/mobile-jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { HttpModule } from '@nestjs/axios';
     // UsersService,
     PassportModule,
     JwtModule.register({
-      signOptions: { expiresIn: '10000s' },
+      signOptions: { expiresIn: '10s' },
       secret: process.env.JWT_ACCESS_SECRET,
     }),
   ],
@@ -29,6 +30,7 @@ import { HttpModule } from '@nestjs/axios';
     JwtStrategy,
     GoogleStrategy,
     KakaoStrategy,
+    MobileJwtRefreshStrategy,
   ],
   controllers: [AuthController],
 })
