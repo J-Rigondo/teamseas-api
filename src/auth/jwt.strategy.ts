@@ -19,9 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     console.log(payload);
 
     const where = new UserWhereUniqueInput();
-    where.id = payload.sub;
+    where.id = payload.id;
 
     const user = await this.usersService.findOne(where);
+    console.log(user);
 
     if (!user) {
       throw new UnauthorizedException();
