@@ -1,21 +1,13 @@
-import {
-  Args,
-  Context,
-  GqlExecutionContext,
-  GraphQLExecutionContext,
-  Mutation,
-  Query,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginResponse } from 'src/auth/dtos/login-response';
 import { LoginUserInput } from 'src/auth/dtos/login-user.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/common/guard/gql-auth.guard';
-import { GoogleAuthGuard } from 'src/common/guard/google-auth.guard';
 import { User as ContextUser } from 'src/common/decorator/user.decorator';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
 import { MobileLoginResponse } from 'src/auth/dtos/mobile-login.response';
+import { MobileJwtRefreshGuard } from 'src/common/guard/mobile-jwt-refresh.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -47,7 +39,16 @@ export class AuthResolver {
 
   @Mutation(() => MobileLoginResponse)
   @UseGuards(GqlAuthGuard)
-  mobileLogin(@ContextUser('local') user: User) {
+  mobileLogin(
+    @Args('loginUserInput') loginUserInput: LoginUserInput,
+    @ContextUser('local') user: User,
+  ) {
+    return this.authService.mobileLogin(user);
+  }
+
+  @Mutation(() => MobileLoginResponse)
+  @UseGuards(MobileJwtRefreshGuard)
+  refreshAccessToken(@ContextUser() user: User) {
     return this.authService.mobileLogin(user);
   }
 }

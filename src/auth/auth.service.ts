@@ -7,6 +7,8 @@ import { hash } from 'bcrypt';
 import { UpdateUserInput } from 'src/users/dtos/update-user.input';
 import { OAuth2Client } from 'google-auth-library';
 import { User } from 'src/@generated/prisma-nestjs-graphql/user/user.model';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ApolloError } from 'apollo-server-express';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -15,6 +17,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private prisma: PrismaService,
   ) {}
 
   async validateUser(email: string, password: string) {
@@ -131,5 +134,38 @@ export class AuthService {
     };
   }
 
-  mobileLogin(user: User) {}
+  mobileLogin(user: User) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+    };
+    const accessToken = this.generateAccessToken(payload);
+    const refreshToken = this.generateRefreshToken(payload);
+    return {
+      user,
+      accessToken,
+      refreshToken: refreshToken.refreshToken,
+    };
+  }
+
+  async verifyMobileRefreshToken(refreshToken: string, id) {
+    console.log('in refrehs');
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    console.log(user);
+
+    if (!user) {
+      throw new ApolloError('user not found', '404');
+    }
+
+    // if (refreshToken !== user.refreshToken) {
+    //   throw new ApolloError('token not matched', '404');
+    // }
+
+    return user;
+  }
 }

@@ -74,11 +74,19 @@ input LoginUserInput {
   password: String!
 }
 
+type MobileLoginResponse {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
+}
+
 type Mutation {
   createPost(createPostInput: CreatePostInput!): PostEntity!
   createUser(createUserInput: UserCreateInput!): User!
   googleLogin(tokenId: String!): LoginResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  mobileLogin(loginUserInput: LoginUserInput!): MobileLoginResponse!
+  refreshAccessToken: MobileLoginResponse!
   removePost(id: Int!): PostEntity!
   removeUser(id: Int!): User!
   updatePost(updatePostInput: UpdatePostInput!): PostEntity!
