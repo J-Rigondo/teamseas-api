@@ -51,4 +51,10 @@ export class AuthResolver {
   refreshAccessToken(@ContextUser() user: User) {
     return this.authService.mobileLogin(user);
   }
+
+  @Mutation(() => MobileLoginResponse)
+  // @UseGuards(GoogleAuthGuard)
+  mobileGoogleLogin(@Args('tokenId', { type: () => String }) tokenId: string) {
+    return this.authService.mobileGoogleLogin(tokenId);
+  }
 }

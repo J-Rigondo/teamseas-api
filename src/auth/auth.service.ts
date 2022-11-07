@@ -168,4 +168,16 @@ export class AuthService {
 
     return user;
   }
+
+  //for graphql
+  async mobileGoogleLogin(tokenId: string) {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    console.log('ticket==', ticket);
+
+    return;
+  }
 }

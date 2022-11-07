@@ -85,6 +85,7 @@ type Mutation {
   createUser(createUserInput: UserCreateInput!): User!
   googleLogin(tokenId: String!): LoginResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  mobileGoogleLogin(tokenId: String!): MobileLoginResponse!
   mobileLogin(loginUserInput: LoginUserInput!): MobileLoginResponse!
   refreshAccessToken: MobileLoginResponse!
   removePost(id: Int!): PostEntity!
