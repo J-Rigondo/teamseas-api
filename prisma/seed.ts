@@ -61,24 +61,32 @@ prisma.$on('query', (e) => {
 async function main() {
   const postPromises = [];
 
-  new Array(20).fill(0).forEach((_) => {
-    postPromises.push(
-      prisma.post.create({
-        data: {
-          title: faker.internet.userName(),
-          content: `this is my description, ${faker.lorem.paragraph()} content`,
-          author: {
-            connect: {
-              id: 1,
-            },
-          },
-        },
-      }),
-    );
+  // new Array(20).fill(0).forEach((_) => {
+  //   postPromises.push(
+  //     prisma.post.create({
+  //       data: {
+  //         title: faker.internet.userName(),
+  //         content: `this is my description, ${faker.lorem.paragraph()} content`,
+  //         author: {
+  //           connect: {
+  //             id: 1,
+  //           },
+  //         },
+  //       },
+  //     }),
+  //   );
+  // });
+  //
+  // const posts = await Promise.all(postPromises);
+  // console.log(posts);
+
+  const re = await prisma.reply.aggregate({
+    _max: {
+      groupNo: true,
+    },
   });
 
-  const posts = await Promise.all(postPromises);
-  console.log(posts);
+  console.log(re);
 }
 
 main()
