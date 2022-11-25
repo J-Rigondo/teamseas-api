@@ -22,12 +22,12 @@ export class AuthResolver {
 
   @Mutation(() => LoginResponse)
   @UseGuards(GqlAuthGuard)
-  login(
+  async login(
     @Args('loginUserInput') loginUserInput: LoginUserInput,
     @Context() context,
     @ContextUser() user: User,
   ) {
-    const result = this.authService.login(context.user);
+    const result = await this.authService.login(context.user);
 
     context.res.cookie('some-cookie', 'some-value', {
       httpOnly: true,
