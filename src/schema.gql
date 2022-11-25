@@ -7,6 +7,14 @@ input CreatePostInput {
   exampleField: Int!
 }
 
+input CreateReplyInput {
+  content: String
+  parentId: Int
+
+  """Example field (placeholder)"""
+  postId: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -63,7 +71,7 @@ input DonationWhereUniqueInput {
 
 type LoginResponse {
   accessToken: String!
-  user: User!
+  refreshToken: String!
 }
 
 input LoginUserInput {
@@ -76,16 +84,20 @@ input LoginUserInput {
 
 type Mutation {
   createPost(createPostInput: CreatePostInput!): PostEntity!
+  createReply(createReplyInput: CreateReplyInput!): Reply!
   createUser(createUserInput: UserCreateInput!): User!
   googleLogin(tokenId: String!): LoginResponse!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   removePost(id: Int!): PostEntity!
+  removeReply(id: Int!): Reply!
   removeUser(id: Int!): User!
   updatePost(updatePostInput: UpdatePostInput!): PostEntity!
+  updateReply(updateReplyInput: UpdateReplyInput!): Reply!
   updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
 }
 
 type Post {
+  Reply: [Reply!]
   _count: PostCount!
   author: User!
   authorId: Int!
@@ -101,6 +113,7 @@ type Post {
 }
 
 type PostCount {
+  Reply: Int!
   favoritedBy: Int!
 }
 
@@ -133,6 +146,12 @@ input PostCreateNestedManyWithoutFavoritedByInput {
   create: [PostCreateWithoutFavoritedByInput!]
 }
 
+input PostCreateNestedOneWithoutReplyInput {
+  connect: PostWhereUniqueInput
+  connectOrCreate: PostCreateOrConnectWithoutReplyInput
+  create: PostCreateWithoutReplyInput
+}
+
 input PostCreateOrConnectWithoutAuthorInput {
   create: PostCreateWithoutAuthorInput!
   where: PostWhereUniqueInput!
@@ -143,7 +162,13 @@ input PostCreateOrConnectWithoutFavoritedByInput {
   where: PostWhereUniqueInput!
 }
 
+input PostCreateOrConnectWithoutReplyInput {
+  create: PostCreateWithoutReplyInput!
+  where: PostWhereUniqueInput!
+}
+
 input PostCreateWithoutAuthorInput {
+  Reply: ReplyCreateNestedManyWithoutPostInput
   content: String
   createdAt: DateTime
   favoritedBy: UserCreateNestedManyWithoutFavoritePostsInput
@@ -155,9 +180,22 @@ input PostCreateWithoutAuthorInput {
 }
 
 input PostCreateWithoutFavoritedByInput {
+  Reply: ReplyCreateNestedManyWithoutPostInput
   author: UserCreateNestedOneWithoutPostsInput!
   content: String
   createdAt: DateTime
+  likes: Int
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+  views: Int
+}
+
+input PostCreateWithoutReplyInput {
+  author: UserCreateNestedOneWithoutPostsInput!
+  content: String
+  createdAt: DateTime
+  favoritedBy: UserCreateNestedManyWithoutFavoritePostsInput
   likes: Int
   published: Boolean
   title: String!
@@ -190,12 +228,186 @@ input PostWhereUniqueInput {
 }
 
 type Query {
+  findAllParentReply(postId: Int!): [Reply!]!
   post(id: Int!): PostEntity!
   posts(cursor: String): PostResponse!
+  reply(id: Int!): Reply!
   user(where: UserWhereUniqueInput!): User!
 
   """전체 유저 리스트"""
   users: [User!]!
+}
+
+type Reply {
+  _count: ReplyCount!
+  author: User!
+  authorId: Int!
+  childCount: Int!
+  childs: [Reply!]
+  content: String
+  del_yn: YN!
+  depth: Int!
+  groupNo: Int!
+  groupOrder: Int!
+  id: ID!
+  parent: Reply
+  parentId: Int
+  post: Post!
+  postId: Int!
+}
+
+type ReplyCount {
+  childs: Int!
+}
+
+input ReplyCreateManyAuthorInput {
+  childCount: Int
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  id: Int
+  parentId: Int
+  postId: Int!
+}
+
+input ReplyCreateManyAuthorInputEnvelope {
+  data: [ReplyCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input ReplyCreateManyParentInput {
+  authorId: Int!
+  childCount: Int
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  id: Int
+  postId: Int!
+}
+
+input ReplyCreateManyParentInputEnvelope {
+  data: [ReplyCreateManyParentInput!]!
+  skipDuplicates: Boolean
+}
+
+input ReplyCreateManyPostInput {
+  authorId: Int!
+  childCount: Int
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  id: Int
+  parentId: Int
+}
+
+input ReplyCreateManyPostInputEnvelope {
+  data: [ReplyCreateManyPostInput!]!
+  skipDuplicates: Boolean
+}
+
+input ReplyCreateNestedManyWithoutAuthorInput {
+  connect: [ReplyWhereUniqueInput!]
+  connectOrCreate: [ReplyCreateOrConnectWithoutAuthorInput!]
+  create: [ReplyCreateWithoutAuthorInput!]
+  createMany: ReplyCreateManyAuthorInputEnvelope
+}
+
+input ReplyCreateNestedManyWithoutParentInput {
+  connect: [ReplyWhereUniqueInput!]
+  connectOrCreate: [ReplyCreateOrConnectWithoutParentInput!]
+  create: [ReplyCreateWithoutParentInput!]
+  createMany: ReplyCreateManyParentInputEnvelope
+}
+
+input ReplyCreateNestedManyWithoutPostInput {
+  connect: [ReplyWhereUniqueInput!]
+  connectOrCreate: [ReplyCreateOrConnectWithoutPostInput!]
+  create: [ReplyCreateWithoutPostInput!]
+  createMany: ReplyCreateManyPostInputEnvelope
+}
+
+input ReplyCreateNestedOneWithoutChildsInput {
+  connect: ReplyWhereUniqueInput
+  connectOrCreate: ReplyCreateOrConnectWithoutChildsInput
+  create: ReplyCreateWithoutChildsInput
+}
+
+input ReplyCreateOrConnectWithoutAuthorInput {
+  create: ReplyCreateWithoutAuthorInput!
+  where: ReplyWhereUniqueInput!
+}
+
+input ReplyCreateOrConnectWithoutChildsInput {
+  create: ReplyCreateWithoutChildsInput!
+  where: ReplyWhereUniqueInput!
+}
+
+input ReplyCreateOrConnectWithoutParentInput {
+  create: ReplyCreateWithoutParentInput!
+  where: ReplyWhereUniqueInput!
+}
+
+input ReplyCreateOrConnectWithoutPostInput {
+  create: ReplyCreateWithoutPostInput!
+  where: ReplyWhereUniqueInput!
+}
+
+input ReplyCreateWithoutAuthorInput {
+  childCount: Int
+  childs: ReplyCreateNestedManyWithoutParentInput
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  parent: ReplyCreateNestedOneWithoutChildsInput
+  post: PostCreateNestedOneWithoutReplyInput!
+}
+
+input ReplyCreateWithoutChildsInput {
+  author: UserCreateNestedOneWithoutReplyInput!
+  childCount: Int
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  parent: ReplyCreateNestedOneWithoutChildsInput
+  post: PostCreateNestedOneWithoutReplyInput!
+}
+
+input ReplyCreateWithoutParentInput {
+  author: UserCreateNestedOneWithoutReplyInput!
+  childCount: Int
+  childs: ReplyCreateNestedManyWithoutParentInput
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  post: PostCreateNestedOneWithoutReplyInput!
+}
+
+input ReplyCreateWithoutPostInput {
+  author: UserCreateNestedOneWithoutReplyInput!
+  childCount: Int
+  childs: ReplyCreateNestedManyWithoutParentInput
+  content: String
+  del_yn: YN
+  depth: Int
+  groupNo: Int!
+  groupOrder: Int
+  parent: ReplyCreateNestedOneWithoutChildsInput
+}
+
+input ReplyWhereUniqueInput {
+  id: Int
 }
 
 """권한"""
@@ -210,6 +422,15 @@ input UpdatePostInput {
   id: Int!
 }
 
+input UpdateReplyInput {
+  content: String
+  id: Int!
+  parentId: Int
+
+  """Example field (placeholder)"""
+  postId: Int
+}
+
 input UpdateUserInput {
   email: String
   name: String
@@ -217,6 +438,7 @@ input UpdateUserInput {
 }
 
 type User {
+  Reply: [Reply!]
   _count: UserCount!
   donations: [Donation!]
 
@@ -235,6 +457,7 @@ type User {
 }
 
 type UserCount {
+  Reply: Int!
   donations: Int!
   favoritePosts: Int!
   followers: Int!
@@ -243,6 +466,7 @@ type UserCount {
 }
 
 input UserCreateInput {
+  Reply: ReplyCreateNestedManyWithoutAuthorInput
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
@@ -280,6 +504,12 @@ input UserCreateNestedOneWithoutPostsInput {
   create: UserCreateWithoutPostsInput
 }
 
+input UserCreateNestedOneWithoutReplyInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutReplyInput
+  create: UserCreateWithoutReplyInput
+}
+
 input UserCreateOrConnectWithoutFavoritePostsInput {
   create: UserCreateWithoutFavoritePostsInput!
   where: UserWhereUniqueInput!
@@ -300,7 +530,13 @@ input UserCreateOrConnectWithoutPostsInput {
   where: UserWhereUniqueInput!
 }
 
+input UserCreateOrConnectWithoutReplyInput {
+  create: UserCreateWithoutReplyInput!
+  where: UserWhereUniqueInput!
+}
+
 input UserCreateWithoutFavoritePostsInput {
+  Reply: ReplyCreateNestedManyWithoutAuthorInput
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
   followers: UserCreateNestedManyWithoutFollowingInput
@@ -314,6 +550,7 @@ input UserCreateWithoutFavoritePostsInput {
 }
 
 input UserCreateWithoutFollowersInput {
+  Reply: ReplyCreateNestedManyWithoutAuthorInput
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
@@ -327,6 +564,7 @@ input UserCreateWithoutFollowersInput {
 }
 
 input UserCreateWithoutFollowingInput {
+  Reply: ReplyCreateNestedManyWithoutAuthorInput
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
@@ -340,6 +578,7 @@ input UserCreateWithoutFollowingInput {
 }
 
 input UserCreateWithoutPostsInput {
+  Reply: ReplyCreateNestedManyWithoutAuthorInput
   donations: DonationCreateNestedManyWithoutUserInput
   email: String!
   favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
@@ -352,7 +591,26 @@ input UserCreateWithoutPostsInput {
   role: Role!
 }
 
+input UserCreateWithoutReplyInput {
+  donations: DonationCreateNestedManyWithoutUserInput
+  email: String!
+  favoritePosts: PostCreateNestedManyWithoutFavoritedByInput
+  followers: UserCreateNestedManyWithoutFollowingInput
+  following: UserCreateNestedManyWithoutFollowersInput
+  name: String!
+  password: String
+  posts: PostCreateNestedManyWithoutAuthorInput
+  provider: String
+  refreshToken: String
+  role: Role!
+}
+
 input UserWhereUniqueInput {
   email: String
   id: Int
+}
+
+enum YN {
+  N
+  Y
 }

@@ -23,5 +23,6 @@ async function bootstrap() {
   // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   await app.listen(4000);
+  console.log('app running at http://localhost:4000/graphql');
 }
 bootstrap();

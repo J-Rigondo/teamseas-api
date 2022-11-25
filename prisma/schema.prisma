@@ -49,16 +49,17 @@ model User {
   followers     User[]     @relation("UserFollows", references: [id])
   role          Role
   ///@HideField()
-  refreshToken String?
-  provider String?
+  refreshToken  String?
+  provider      String?
 
+  Reply Reply[]
   @@map("user")
 }
 
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
-  content     String? @db.MediumText
+  content     String?  @db.MediumText
   published   Boolean  @default(false)
   author      User     @relation(fields: [authorId], references: id)
   authorId    Int
@@ -69,6 +70,33 @@ model Post {
   favoritedBy User[]   @relation(name: "FavoritedPosts", references: [id])
 
   @@map("post")
+  Reply Reply[]
+}
+
+model Reply {
+  id         Int     @id @default(autoincrement())
+  post       Post    @relation(fields: [postId], references: id)
+  postId     Int
+  author     User    @relation(fields: [authorId], references: id)
+  authorId   Int
+  parent    Reply?   @relation("ParentReply", fields: [parentId], references: id)
+  parentId  Int?
+  content    String? @db.MediumText
+  groupNo    Int
+  depth      Int     @default(0)
+  groupOrder Int     @default(0)
+  childCount Int     @default(0)
+  del_yn     YN      @default(value: N)
+
+  childs Reply[] @relation("ParentReply")
+
+
+  @@map("reply")
+}
+
+enum YN {
+  Y
+  N
 }
 
 ///권한

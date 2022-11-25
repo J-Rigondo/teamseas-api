@@ -9,6 +9,7 @@ import { PostsModule } from './posts/posts.module';
 import { AsyncContextModule } from 'src/async-context/async-context.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AsyncContextInterceptor } from 'src/common/interceptor/async-context.interceptor';
+import { ReplyModule } from './reply/reply.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AsyncContextInterceptor } from 'src/common/interceptor/async-context.in
     PrismaModule,
     PostsModule,
     AsyncContextModule,
+    ReplyModule,
   ],
   providers: [
     {
