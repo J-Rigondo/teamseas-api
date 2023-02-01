@@ -35,7 +35,10 @@ export class AuthResolver {
       domain: process.env.FRONT_END_DOMAIN,
       path: '/',
     });
-    return result;
+    return {
+      accessToken: result.accessToken,
+      refreshToken: result.refeshTokenInfo.refreshToken,
+    };
   }
 
   @Mutation(() => LoginResponse)

@@ -72,6 +72,9 @@ export class ReplyService {
             groupNo,
             depth: depth + 1,
             groupOrder: maxGroupOrder + 1,
+            parent: {
+              connect: { id: parentId },
+            },
           },
         });
       }
@@ -111,6 +114,9 @@ export class ReplyService {
             groupNo,
             depth: depth + 1,
             groupOrder: groupOrder + 1,
+            parent: {
+              connect: { id: parentId },
+            },
           },
         });
       }
@@ -148,6 +154,9 @@ export class ReplyService {
             groupNo,
             depth: depth + 1,
             groupOrder: groupOrder + childCount + 1,
+            parent: {
+              connect: { id: parentId },
+            },
           },
         });
       }

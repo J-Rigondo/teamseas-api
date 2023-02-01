@@ -19,7 +19,7 @@ import { JwtRefreshStrategy } from 'src/auth/jwt-refresh.strategy';
     // UsersService,
     PassportModule,
     JwtModule.register({
-      signOptions: { expiresIn: '10000s' },
+      signOptions: { expiresIn: '30d' },
       secret: process.env.JWT_ACCESS_SECRET,
     }),
   ],

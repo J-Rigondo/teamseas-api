@@ -44,6 +44,7 @@ export class PostsService {
       },
       include: {
         author: true,
+        replys: { orderBy: { createdAt: 'asc' } },
       },
     });
   }

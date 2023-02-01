@@ -8,12 +8,13 @@ import { Auth } from 'src/common/decorator/auth.decorator';
 import { Role } from 'src/@generated/prisma-nestjs-graphql/prisma/role.enum';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { Post } from 'src/@generated/prisma-nestjs-graphql/post/post.model';
 
-@Resolver(() => PostEntity)
+@Resolver(() => Post)
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
-  @Mutation(() => PostEntity)
+  @Mutation(() => Post)
   createPost(@Args('createPostInput') createPostInput: CreatePostInput) {
     return this.postsService.create(createPostInput);
   }
@@ -25,18 +26,17 @@ export class PostsResolver {
     return this.postsService.findAll(cursor);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Query(() => PostEntity, { name: 'post' })
+  @Query(() => Post, { name: 'post' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.postsService.findOne(id);
   }
 
-  @Mutation(() => PostEntity)
+  @Mutation(() => Post)
   updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
     return this.postsService.update(updatePostInput.id, updatePostInput);
   }
 
-  @Mutation(() => PostEntity)
+  @Mutation(() => Post)
   removePost(@Args('id', { type: () => Int }) id: number) {
     return this.postsService.remove(id);
   }

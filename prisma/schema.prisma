@@ -68,9 +68,9 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   favoritedBy User[]   @relation(name: "FavoritedPosts", references: [id])
+  replys      Reply[]
 
   @@map("post")
-  Reply Reply[]
 }
 
 model Reply {
@@ -79,14 +79,15 @@ model Reply {
   postId     Int
   author     User    @relation(fields: [authorId], references: id)
   authorId   Int
-  parent    Reply?   @relation("ParentReply", fields: [parentId], references: id)
-  parentId  Int?
+  parent     Reply?  @relation("ParentReply", fields: [parentId], references: id)
+  parentId   Int?
   content    String? @db.MediumText
   groupNo    Int
   depth      Int     @default(0)
   groupOrder Int     @default(0)
   childCount Int     @default(0)
   del_yn     YN      @default(value: N)
+  createdAt   DateTime @default(now())
 
   childs Reply[] @relation("ParentReply")
 
